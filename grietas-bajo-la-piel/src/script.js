@@ -29,7 +29,7 @@ const canvas = document.querySelector('canvas.webgl')
 const scene = new THREE.Scene()
     
     // Background
-    const fondo = { color: '#000000' }
+    const fondo = { color: 'rgb(10, 5, 14)' }
     scene.background = new THREE.Color(fondo.color)
 
 // 4. Texturas

@@ -6,8 +6,9 @@
     3. Enlaces / Botones
     4. Body
     5. Main
-    5. Areas de recursos
-    6. Footer
+    6. Areas de recursos
+    7. Footer
+    8. Reactive
 
 */
 
@@ -17,11 +18,18 @@
     padding: 0px;
     box-sizing: border-box;
 }
+html, body{
+    max-width: 100%;
+    overflow-x: hidden;
+}
 :root {
-    --color-principal: #0069af;
-    --color-acento: #1238a0;
-    --color-terceario: #e29127;
-    --color-texto: #101720;
+    --color-principal: #799180; /* Secciones principales, tarjetas, elementos de navegación, ilustraciones */
+    --color-acento: #F2C063; /* Botones, elementos destacados, estados activos, llamadas a la acción importantes */
+    --color-terceario: #E3D0B5; /* Backgrounds grandes, secciones secundarias, espacio para respirar visualmente */
+    --color-soporte-oscuro: #201826; /* Algunos textos, encabezado/pie de página, iconos, fuerte contraste */
+    --color-soporte-claro: #E4FFFF; /* Cuadros informativos/fondos tranquilos */
+    --color-atencion: #BF4E24; /* Color extra para llamar la atencion/alertas */
+    --color-texto: #101720; /* Color negro para textos que no es negro puro */
 }
 
 /* 1. Tipografias */
@@ -34,15 +42,20 @@
     justify-content: space-between;
     align-items: center;
     border-bottom: 3px solid var(--color-principal);
-    background: rgb(252, 252, 252);
+    background: var(--color-soporte-oscuro);
+}
+
+#cabecera-principal a{
+    text-decoration: none;
+}
+
+#titulo-header{
+    font-size: 20px;
+    text-decoration: none;
 }
 
 /* 3. Enlaces / Botones */
 .enlaces {
-    font-family: "Quicksand", sans-serif;
-    font-optical-sizing: auto;
-    font-weight: 400;
-    font-style: normal;
     color: var(--color-principal);
     text-decoration: none;
 }
@@ -53,14 +66,10 @@
     /* Botón inicio */
     .boton
     {
-        position: absolute;
-        top: calc(50% + 25px);
-        left: 50%;
-        transform: translateX(-50%);
-        z-index: 2;
+        pointer-events: auto;
         padding: 12px 32px;
-        background: transparent;
-        color: white;
+        background: var(--color-acento);
+        color: var(--color-soporte-oscuro);
         border: 1px solid white;
         border-radius: 999px;
         font-size: 16px;
@@ -69,11 +78,14 @@
     }
     .boton:hover
     {
-        background: white;
-        color: black;
+        background: var(--color-atencion);
+        color: var(--color-soporte-claro);
     }
 
 /* 4. Body */
+body{
+    background: var(--color-terceario);
+}
 
 /* 5. Main */
     /* Titulo principal */
@@ -100,6 +112,7 @@
         width: 100%;
         height: 100vh;
         overflow: hidden;
+        background: var(--color-soporte-oscuro);
     }
 
     .escena .webgl
@@ -123,8 +136,22 @@
         align-items: center;
         justify-content: flex-start;
         gap: 24px;
-        padding: 15vh 20px 60px;
+        padding: 134.25px 20px 60px;
         pointer-events: none;
+    }
+
+    /* Fade entre la escena y el contenido */
+    .escena::after
+    {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 75px;
+        background: linear-gradient(to bottom, transparent, var(--color-terceario));
+        pointer-events: none;
+        z-index: 2;
     }
 
 /* 6. Areas de recursos */
@@ -161,6 +188,11 @@
     }
 
     /* Articulo 2: Recursos de ayuda y prevencion */
+    .articulo-recursos
+    {
+        padding: 0 70px;
+    }
+
     .recursos-grid
     {
         display: grid;
@@ -171,10 +203,30 @@
 
     .recurso-caja
     {
-        background: var(--color-terceario);
+        background: var(--color-principal);
         color: var(--color-texto);
-        padding: 24px;
+        padding: 32px 24px;
         border-radius: 8px;
+    }
+
+    .recurso-caja a
+    {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        color: inherit;
+        text-decoration: none;
+        text-align: center;
+    }
+
+    .recurso-imagen
+    {
+        width: 100%;
+        aspect-ratio: 4 / 3;
+        object-fit: cover;
+        border-radius: 8px;
+        background: var(--color-acento);
     }
 
     /* Articulo 3: Mapa de apoyo */
@@ -183,16 +235,17 @@
         width: 100%;
         height: 400px;
         margin-top: 20px;
-        background: var(--color-acento);
+        background: var(--color-soporte-claro);
         border-radius: 8px;
     }
 
-    /* 7. Footer */
+/* 7. Footer */
 .footer {
     display: flex;
     flex-wrap: wrap;
     gap: 32px;
     padding: 32px;
-    background: #ffffff;
-    border-top: 3px solid var(--color-principal);
+    background: var(--color-soporte-oscuro);
 }
+
+/* 8. Reactive */
