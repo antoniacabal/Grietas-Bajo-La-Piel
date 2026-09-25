@@ -87,7 +87,23 @@ body{
     background: var(--color-terceario);
 }
 
+html, body
+{
+    min-height: 100vh;
+}
+
+body
+{
+    display: flex;
+    flex-direction: column;
+}
+
 /* 5. Main */
+main
+{
+    flex: 1;
+}
+
     /* Titulo principal */
     .titulo-principal{
         margin: 0;
@@ -154,6 +170,48 @@ body{
         z-index: 2;
     }
 
+    /* Decoración de los titulos de los articulos */
+    .decoracion-titulo{
+        position: relative;
+        width: 100%;
+        height: 300px;
+        overflow: hidden;
+    }
+    .fondo-titulo{
+        position: absolute;
+        inset: 0;
+            
+        background: var(--color-principal);
+
+        /* Luego podrás sustituirlo por una imagen */
+        /*
+        background-image: url("./img/respiracion.jpg");
+        background-size: cover;
+        background-position: center;
+        */
+    }
+    .fondo-titulo::after{
+        content: "";
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 40%;
+        height: 100%;
+        background: linear-gradient(to right, transparent,var(--color-terceario));
+    }
+    #titulo-pagina{
+        position: absolute;
+        top: 50%;
+        left: 5%;
+        transform: translateY(-50%);
+        color: white;
+        font-size: 3.5rem;
+        z-index: 2;
+        max-width: 90%;
+        text-align: left;
+    }
+
+
 /* 6. Areas de recursos */
 .contenido
 {
@@ -188,10 +246,6 @@ body{
     }
 
     /* Articulo 2: Recursos de ayuda y prevencion */
-    .articulo-recursos
-    {
-        padding: 0 70px;
-    }
 
     .recursos-grid
     {
@@ -205,7 +259,7 @@ body{
     {
         background: var(--color-principal);
         color: var(--color-texto);
-        padding: 32px 24px;
+        padding: 16px;
         border-radius: 8px;
     }
 
@@ -249,3 +303,67 @@ body{
 }
 
 /* 8. Reactive */
+    /* Decoración de los titulos de los articulos */
+    @media (max-width: 768px)
+    {
+        #titulo-pagina
+            {
+                font-size: 2.5rem;
+            }
+    }
+
+    /* Recursos */
+    @media (max-width: 768px)
+    {
+        .recursos-grid
+        {
+            grid-template-columns: 1fr;
+        }
+    }
+    @media (max-width: 768px)
+        {
+            .recursos-grid
+            {
+                grid-template-columns: 1fr;
+            }
+        .recurso-caja
+        {
+            padding: 0;
+            overflow: hidden;
+        }
+        .recurso-caja a
+        {
+            position: relative;
+            display: block;
+        }
+        .recurso-imagen
+        {
+            width: 100%;
+            height: 220px;
+            display: block;
+        }
+        .recurso-caja h3
+        {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            color: white;
+            font-size: 1.3rem;
+            text-align: left;
+            z-index: 2;
+        }
+        .recurso-caja a::after
+        {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                to top,
+                rgba(0,0,0,0.8),
+                rgba(0,0,0,0.2),
+                transparent
+            );
+            z-index: 1;
+        }
+    }
