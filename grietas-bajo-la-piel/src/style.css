@@ -30,9 +30,40 @@ html, body{
     --color-soporte-claro: #E4FFFF; /* Cuadros informativos/fondos tranquilos */
     --color-atencion: #BF4E24; /* Color extra para llamar la atencion/alertas */
     --color-texto: #101720; /* Color negro para textos que no es negro puro */
+    --color-escena: rgb(10, 5, 14); /* Fondo de la sección del juego (muestra del index y narrativa) */
+    --color-advertencia: #D01F2A; /* Título de la ventana de advertencia (en el mockup era #A90B13, subido un poco para que contraste mejor) */
+    --color-advertencia-icono: #780A0F; /* Triángulo de advertencia */
+    --color-advertencia-flecha: #A6869B; /* Flechas de Volver / Seguir */
 }
 
 /* 1. Tipografias */
+.titulo-principal{
+    font-family: "Luckiest Guy", cursive;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 32px; 
+}
+
+.titulo{
+    font-family: "Dongle", sans-serif;
+    font-weight: 700;
+    font-style: normal;
+    font-size: 36px;
+}
+
+.subtitulo{
+    font-family: "Dongle", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 50px;
+}
+
+p{
+    font-family: "Outfit", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+}
 
 /* 2. Header / Cabecera */
 #cabecera-principal{
@@ -56,17 +87,26 @@ html, body{
 
 /* 3. Enlaces / Botones */
 .enlaces {
+    font-family: "Outfit", sans-serif;
     color: var(--color-principal);
     text-decoration: none;
+    transition: color 0.2s;
 }
 .enlaces {
     text-decoration: underline;
+}
+.enlaces:hover {
+    color: var(--color-atencion);
 }
 
     /* Botón inicio */
     .boton
     {
         pointer-events: auto;
+        display: inline-block;
+        text-align: center;
+        text-decoration: none;
+        font-family: "Outfit", sans-serif;
         padding: 12px 32px;
         background: var(--color-acento);
         color: var(--color-soporte-oscuro);
@@ -112,12 +152,18 @@ main
         user-select: none;
     }
 
+    /* El h1 del héroe usa el mismo tamaño que los titulos-pagina de las otras páginas */
+    .escena-contenido .titulo-principal{
+        font-size: 3.5rem;
+        text-align: left;
+    }
+
     /* Parrafo de la escena */
     .escena-parrafo{
         margin: 0;
         max-width: 40ch;
         color: white;
-        text-align: center;
+        text-align: left;
         user-select: none;
     }
 
@@ -125,10 +171,25 @@ main
     .escena
     {
         position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 32px; /* distancia entre el texto y el canvas */
         width: 100%;
         height: 100vh;
+        padding: 0 5%;
         overflow: hidden;
-        background: var(--color-soporte-oscuro);
+        background: var(--color-escena);
+    }
+
+    /* Contenedor del canvas de la muestra (a la derecha) */
+    .escena-canvas
+    {
+        position: relative;
+        flex: 1 1 55%;
+        max-width: 680px; /* limita el canvas para que el texto quede más cerca del cubo */
+        height: 75%;
+        min-width: 0;
     }
 
     .escena .webgl
@@ -144,16 +205,21 @@ main
     /* Contenido de la escena */
     .escena-contenido
     {
-        position: absolute;
-        inset: 0;
+        position: relative;
         z-index: 1;
+        flex: 0 1 auto; /* el bloque mide lo que mide el título... */
+        max-width: 45%;
         display: flex;
         flex-direction: column;
-        align-items: center;
-        justify-content: flex-start;
+        align-items: flex-start;
+        justify-content: center;
         gap: 24px;
-        padding: 134.25px 20px 60px;
-        pointer-events: none;
+    }
+
+    /* ...y el botón se centra respecto a ese ancho (el del título) */
+    .escena-contenido .boton
+    {
+        align-self: center;
     }
 
     /* Fade entre la escena y el contenido */
@@ -174,31 +240,41 @@ main
     .decoracion-titulo{
         position: relative;
         width: 100%;
-        height: 300px;
+        height: 400px;
         overflow: hidden;
     }
     .fondo-titulo{
         position: absolute;
         inset: 0;
-            
-        background: var(--color-principal);
-
-        /* Luego podrás sustituirlo por una imagen */
-        /*
-        background-image: url("./img/respiracion.jpg");
-        background-size: cover;
-        background-position: center;
-        */
-    }
-    .fondo-titulo::after{
-        content: "";
-        position: absolute;
-        top: 0;
-        right: 0;
-        width: 40%;
+        width: 100%;
         height: 100%;
-        background: linear-gradient(to right, transparent,var(--color-terceario));
+        object-fit: cover;
+        object-position: center 20%;
+
+        /* Color de respaldo mientras no haya una imagen real */
+        background: var(--color-principal);
     }
+
+    /* Encuadre específico: la cara de la mujer está cerca de la parte superior de la foto */
+    .fondo-titulo--respiracion{
+        object-position: 70% 10%;
+    }
+
+    /* Fade sobre la imagen. Va en un div aparte porque ::after no se renderiza
+       sobre un <img> (es un elemento reemplazado) */
+    .fondo-titulo-fade{
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        pointer-events: none;
+        background: linear-gradient(to right, transparent, var(--color-terceario));
+    }
+
+    /* Variante del fade hacia abajo (usada en la página de Contexto) */
+    .fondo-titulo-fade--abajo{
+        background: linear-gradient(to bottom, transparent, var(--color-terceario));
+    }
+
     #titulo-pagina{
         position: absolute;
         top: 50%;
@@ -209,6 +285,19 @@ main
         z-index: 2;
         max-width: 90%;
         text-align: left;
+    }
+
+    /* Titulo de la página de Contexto: centrado sobre la imagen */
+    #titulo-pagina-contexto{
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: white;
+        font-size: 3.5rem;
+        z-index: 2;
+        max-width: 90%;
+        text-align: center;
     }
 
 
@@ -246,41 +335,87 @@ main
     }
 
     /* Articulo 2: Recursos de ayuda y prevencion */
+    .articulo-recursos
+    {
+        text-align: center;
+    }
+
+    .articulo-recursos > p
+    {
+        /* Mantener la justificación actual del párrafo, solo centrar su caja */
+        text-align: left;
+        max-width: 75ch;
+        margin: 0 auto;
+        font-size: 1.15rem;
+    }
 
     .recursos-grid
     {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 24px;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 32px;
         margin-top: 20px;
+        max-width: 1100px;
+        margin-left: auto;
+        margin-right: auto;
     }
 
     .recurso-caja
     {
-        background: var(--color-principal);
-        color: var(--color-texto);
-        padding: 16px;
+        position: relative;
+        aspect-ratio: 1 / 1;
         border-radius: 8px;
+        overflow: hidden;
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .recurso-caja:hover
+    {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 24px rgba(32, 24, 38, 0.35);
     }
 
     .recurso-caja a
     {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 12px;
-        color: inherit;
+        display: block;
+        position: relative;
+        width: 100%;
+        height: 100%;
+        color: white;
         text-decoration: none;
-        text-align: center;
     }
 
     .recurso-imagen
     {
+        position: absolute;
+        inset: 0;
         width: 100%;
-        aspect-ratio: 4 / 3;
+        height: 100%;
         object-fit: cover;
-        border-radius: 8px;
+        object-position: center top;
         background: var(--color-acento);
+        transition: transform 0.35s ease;
+    }
+
+    .recurso-caja:hover .recurso-imagen
+    {
+        transform: scale(1.06);
+    }
+
+    .recurso-caja h3
+    {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        margin: 0;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        padding: 22px;
+        text-align: center;
+        color: white;
+        line-height: 0.85;
+        background: linear-gradient(to top, rgba(32, 24, 38, 0.8), rgba(32, 24, 38, 0.15) 55%, transparent);
     }
 
     /* Articulo 3: Mapa de apoyo */
@@ -293,26 +428,511 @@ main
         border-radius: 8px;
     }
 
+/* 6.1 Contexto: carrusel del proceso de personaje */
+.context,
+.carusel
+{
+    padding: 0 5%;
+}
+
+.context
+{
+    max-width: 75ch;
+    margin: 0 auto;
+    padding-top: 24px;
+}
+
+.context p
+{
+    font-size: 1.15rem;
+}
+
+.carusel
+{
+    padding-top: 48px;
+    padding-bottom: 56px;
+}
+
+.carusel > .titulo
+{
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.carrusel
+{
+    position: relative;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.carrusel-pista
+{
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    border-radius: 8px;
+}
+
+.carrusel-pista::-webkit-scrollbar
+{
+    display: none;
+}
+
+.carrusel-slide
+{
+    position: relative;
+    flex: 0 0 100%;
+    scroll-snap-align: center;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    background: var(--color-principal); /* respaldo si la imagen no carga */
+}
+
+/* Fondo: la misma imagen, ampliada y difuminada (la ruta la pone carrusel.js en --fondo) */
+.carrusel-slide::before
+{
+    content: "";
+    position: absolute;
+    inset: -40px; /* evita que el blur deje bordes claros */
+    background-image: var(--fondo);
+    background-size: cover;
+    background-position: center;
+    filter: blur(30px);
+}
+
+.carrusel-slide img
+{
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background: transparent;
+}
+
+.carrusel-slide h3
+{
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+    margin: 0;
+    padding: 28px 20px 14px;
+    text-align: center;
+    color: white;
+    line-height: 0.85;
+    background: linear-gradient(to top, rgba(32, 24, 38, 0.85), transparent);
+}
+
+.carrusel-boton
+{
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+    width: 44px;
+    height: 44px;
+    border: 1px solid white;
+    border-radius: 50%;
+    background: var(--color-acento);
+    color: var(--color-soporte-oscuro);
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+    transition: background 0.3s, color 0.3s, opacity 0.3s;
+}
+
+.carrusel-boton:hover
+{
+    background: var(--color-atencion);
+    color: var(--color-soporte-claro);
+}
+
+.carrusel-boton:focus-visible,
+.carrusel-punto:focus-visible
+{
+    outline: 3px solid var(--color-soporte-oscuro);
+    outline-offset: 2px;
+}
+
+.carrusel-boton:disabled
+{
+    opacity: 0.35;
+    cursor: default;
+}
+
+.carrusel-boton--anterior { left: 12px; }
+.carrusel-boton--siguiente { right: 12px; }
+
+.carrusel-puntos
+{
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 16px;
+}
+
+.carrusel-punto
+{
+    width: 12px;
+    height: 12px;
+    padding: 0;
+    border: 2px solid var(--color-soporte-oscuro);
+    border-radius: 50%;
+    background: transparent;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.carrusel-punto[aria-current="true"]
+{
+    background: var(--color-soporte-oscuro);
+}
+
+@media (prefers-reduced-motion: reduce)
+{
+    .carrusel-pista { scroll-behavior: auto; }
+}
+
+/* 6.2 Narrativa: el juego a pantalla completa, sin header, footer ni scroll */
+html.sin-scroll,
+body.sin-scroll
+{
+    height: 100%;
+    overflow: hidden;
+    overscroll-behavior: none;
+}
+
+body.pagina-narrativa
+{
+    background: var(--color-escena);
+}
+
+.webgl--narrativa
+{
+    position: fixed;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+/* 6.3 Advertencia: ventana flotante que aparece al pulsar "Iniciar" en el index */
+html.modal-abierto
+{
+    overflow: hidden; /* sin scroll de la página mientras la ventana está abierta */
+    scrollbar-gutter: stable; /* conserva el espacio del scrollbar para que la página de fondo no se mueva */
+}
+
+.advertencia
+{
+    /* El reset global (* { margin: 0 }) anula el centrado nativo del <dialog>, por eso se repite aquí */
+    margin: auto;
+    padding: 0;
+    width: 100%;
+    max-width: min(680px, 92vw);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
+    background: var(--color-soporte-oscuro);
+    color: white;
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.55);
+}
+
+/* La página sigue visible detrás, pero más oscura */
+.advertencia::backdrop
+{
+    background: rgba(10, 5, 14, 0.78);
+}
+
+/* La caja no tiene animación de entrada: lo único que la mueve es la sacudida.
+   (Si tuviera una, se volvería a reproducir cada vez que termina la sacudida.) */
+.advertencia[open]::backdrop
+{
+    animation: advertencia-fondo 0.25s ease-out;
+}
+
+@keyframes advertencia-fondo
+{
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Sacudida cuando se intenta salir sin usar los botones (la pone advertencia.js) */
+.advertencia.sacudir
+{
+    animation: advertencia-sacudida 0.45s ease-in-out;
+}
+
+@keyframes advertencia-sacudida
+{
+    0%   { transform: translateX(0); border-color: var(--color-advertencia); }
+    15%  { transform: translateX(-12px); }
+    30%  { transform: translateX(10px); }
+    45%  { transform: translateX(-8px); }
+    60%  { transform: translateX(6px); }
+    75%  { transform: translateX(-3px); }
+    100% { transform: translateX(0); border-color: rgba(255, 255, 255, 0.12); }
+}
+
+/* Para quien tiene reducción de movimiento: sin desplazamiento, solo destello del borde */
+@keyframes advertencia-destello
+{
+    0%, 100% { border-color: rgba(255, 255, 255, 0.12); box-shadow: 0 24px 64px rgba(0, 0, 0, 0.55); }
+    30%, 70% { border-color: var(--color-advertencia); box-shadow: 0 0 0 4px rgba(208, 31, 42, 0.45), 0 24px 64px rgba(0, 0, 0, 0.55); }
+}
+
+.advertencia-caja
+{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 40px 40px 28px;
+}
+
+.advertencia-icono
+{
+    width: 88px;
+    height: auto;
+    color: var(--color-advertencia-icono);
+}
+
+.advertencia-icono .exclamacion
+{
+    fill: var(--color-soporte-oscuro);
+}
+
+.advertencia-titulo
+{
+    font-size: 4.5rem;
+    line-height: 0.9;
+    text-align: center;
+    color: var(--color-advertencia);
+}
+
+/* El <p> usa la tipografía de párrafo (Outfit) */
+.advertencia-texto
+{
+    width: 100%;
+    font-size: 0.95rem;
+    line-height: 1.55;
+    color: var(--color-soporte-claro);
+}
+
+/* Advertencias concretas (sonidos fuertes, luces parpadeantes, etc.) */
+.advertencia-subtitulo
+{
+    width: 100%;
+    margin-top: 4px;
+    font-size: 2rem;
+    line-height: 0.9;
+    color: var(--color-soporte-claro);
+}
+
+.advertencia-lista
+{
+    /* Columnas balanceadas: con 5 ítems queda 3 + 2, sin ítems huérfanos.
+       Si agregas o quitas advertencias, se reparten solas. En pantallas angostas pasa a 1 columna. */
+    column-count: 2;
+    column-width: 15rem;
+    column-gap: 32px;
+    width: 100%;
+    list-style: none;
+}
+
+.advertencia-lista li
+{
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 8px;
+    break-inside: avoid; /* un ítem nunca se parte entre dos columnas */
+    font-family: "Outfit", sans-serif;
+    font-size: 0.95rem;
+    line-height: 1.35;
+    color: var(--color-soporte-claro);
+}
+
+.advertencia-lista li::before
+{
+    content: "";
+    flex: none;
+    width: 8px;
+    height: 8px;
+    margin-top: 0.4em;
+    border-radius: 2px;
+    background: var(--color-advertencia);
+}
+
+/* Aviso de compatibilidad: solo se ve en teléfonos y pantallas pequeñas */
+.advertencia-aviso
+{
+    display: none;
+    width: 100%;
+    padding: 12px 16px;
+    border-left: 4px solid var(--color-acento);
+    border-radius: 6px;
+    background: rgba(242, 192, 99, 0.12);
+}
+
+.advertencia-aviso-titulo
+{
+    font-size: 1.9rem;
+    line-height: 0.9;
+    color: var(--color-acento);
+}
+
+.advertencia-aviso p
+{
+    margin-top: 4px;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--color-soporte-claro);
+}
+
+@media (max-width: 768px), (pointer: coarse)
+{
+    .advertencia-aviso
+    {
+        display: block;
+    }
+}
+
+.advertencia-acciones
+{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-top: 16px;
+}
+
+.advertencia-accion
+{
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 10px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-family: "Dongle", sans-serif;
+    font-weight: 700;
+    font-size: 2.75rem;
+    line-height: 1;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.advertencia-accion--volver { color: #D9D9D9; }
+.advertencia-accion--seguir { color: white; }
+
+.advertencia-accion:hover
+{
+    color: var(--color-acento);
+}
+
+.advertencia-accion:focus-visible
+{
+    outline: 3px solid var(--color-acento);
+    outline-offset: 2px;
+    border-radius: 6px;
+}
+
+.advertencia-accion svg
+{
+    width: 32px;
+    height: 32px;
+    color: var(--color-advertencia-flecha);
+    transition: transform 0.2s;
+}
+
+.advertencia-accion--volver:hover svg { transform: translateX(-4px); }
+.advertencia-accion--seguir:hover svg { transform: translateX(4px); }
+
+@media (prefers-reduced-motion: reduce)
+{
+    .advertencia[open]::backdrop { animation: none; }
+    .advertencia.sacudir { animation: advertencia-destello 0.6s ease-out; }
+    .advertencia-accion svg { transition: none; }
+}
+
 /* 7. Footer */
 .footer {
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
     gap: 32px;
-    padding: 32px;
+    padding: 32px 32px 60px;
     background: var(--color-soporte-oscuro);
+}
+
+.patrocinadores
+{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+}
+
+.patrocinadores-titulo
+{
+    color: white;
+    font-size: 14px;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    opacity: 0.8;
+}
+
+.patrocinadores-lista
+{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 22px 36px;
+    list-style: none;
+}
+
+.patrocinadores-lista a
+{
+    display: flex;
+    align-items: center;
+    gap: 16px; /* separación entre el logo y el texto */
+    padding: 0;
+    text-decoration: none; /* quita el subrayado del texto de la Cruz Roja */
+    transition: transform 0.2s;
+}
+
+.patrocinadores-lista a:hover
+{
+    transform: scale(1.05);
+}
+
+.patrocinador-logo
+{
+    height: 64px;
+    width: auto;
+    display: block;
 }
 
 /* 8. Reactive */
     /* Decoración de los titulos de los articulos */
     @media (max-width: 768px)
     {
-        #titulo-pagina
+        #titulo-pagina,
+        #titulo-pagina-contexto,
+        .escena-contenido .titulo-principal
             {
                 font-size: 2.5rem;
             }
     }
 
-    /* Recursos */
+    /* Recursos: una sola columna en mobile (el diseño de la caja ya es el mismo que en escritorio) */
     @media (max-width: 768px)
     {
         .recursos-grid
@@ -320,50 +940,88 @@ main
             grid-template-columns: 1fr;
         }
     }
+
+    /* Footer: patrocinadores uno encima del otro en mobile */
     @media (max-width: 768px)
+    {
+        .patrocinadores-lista
         {
-            .recursos-grid
-            {
-                grid-template-columns: 1fr;
-            }
-        .recurso-caja
-        {
-            padding: 0;
-            overflow: hidden;
+            flex-direction: column;
+            align-items: center;
+            gap: 28px;
         }
-        .recurso-caja a
+
+        .carrusel-boton
         {
-            position: relative;
-            display: block;
+            width: 38px;
+            height: 38px;
         }
-        .recurso-imagen
+    }
+
+    /* Escena del index: texto arriba y muestra del juego abajo en mobile */
+    @media (max-width: 768px)
+    {
+        .escena
         {
+            flex-direction: column;
+            justify-content: center;
+            gap: 24px;
+            padding: 32px 5% 80px;
+        }
+
+        .escena-contenido
+        {
+            flex: 0 0 auto;
+            max-width: 100%;
+            align-items: center;
+        }
+
+        .escena-contenido .titulo-principal,
+        .escena-parrafo
+        {
+            text-align: center;
+        }
+
+        .escena-canvas
+        {
+            flex: 0 0 40%;
             width: 100%;
-            height: 220px;
-            display: block;
+            max-width: none;
+            height: auto;
         }
-        .recurso-caja h3
+    }
+
+    /* Ventana de advertencia en pantallas pequeñas */
+    @media (max-width: 768px)
+    {
+        .advertencia-caja
         {
-            position: absolute;
-            bottom: 20px;
-            left: 20px;
-            right: 20px;
-            color: white;
-            font-size: 1.3rem;
-            text-align: left;
-            z-index: 2;
+            padding: 28px 22px 20px;
         }
-        .recurso-caja a::after
+
+        .advertencia-icono
         {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(
-                to top,
-                rgba(0,0,0,0.8),
-                rgba(0,0,0,0.2),
-                transparent
-            );
-            z-index: 1;
+            width: 72px;
+        }
+
+        .advertencia-titulo
+        {
+            font-size: 3.5rem;
+        }
+
+        .advertencia-texto,
+        .advertencia-lista li
+        {
+            font-size: 0.9rem;
+        }
+
+        .advertencia-subtitulo
+        {
+            font-size: 1.75rem;
+        }
+
+        .advertencia-accion
+        {
+            font-size: 2.25rem;
         }
     }
